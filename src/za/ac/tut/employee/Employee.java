@@ -3,7 +3,6 @@ package za.ac.tut.employee;
 
 public class Employee {
     private String username;
-    
     private String gender;
     private String role;
     private String password;
@@ -49,8 +48,11 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee Detail(s) " + "\nusername: " + username + "\n gender: " + gender + "\n role: " + role + " \n password: " + password ;
+        return "Employee Detail(s)" + "\nusername: " + username + "\ngender: " + gender + "\nrole=" + role + "'\npassword: " + password ;
     }
+
+    
+   
 
     
 }
