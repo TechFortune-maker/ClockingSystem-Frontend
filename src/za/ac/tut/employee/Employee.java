@@ -3,6 +3,7 @@ package za.ac.tut.employee;
 
 public class Employee {
     private String username;
+    
     private String gender;
     private String role;
     private String password;
