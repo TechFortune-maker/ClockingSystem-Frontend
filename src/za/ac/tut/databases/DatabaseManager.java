@@ -34,15 +34,16 @@ public class DatabaseManager {
         try (Connection connection = connector.connect();
                 PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String gender = rs.getString("gender");
-                String password = rs.getString("password");
-                String role = rs.getString("role");
-
-                User user = new User(username, gender, role, password);
-                return user;
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String gender = rs.getString("gender");
+                    String password = rs.getString("password");
+                    String role = rs.getString("role");
+                    
+                    User user = new User(username, gender, role, password);
+                    return user;
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -64,9 +65,25 @@ public class DatabaseManager {
     }
     
     public void addClockInTime(String username) {
+        boolean userExists = userExists(username);
+        
+        if (userExists) {
+            String sql = "UPDATE Time SET clockInTime = ? WHERE username = ?";
+            
+            try (Connection connection = connector.connect();
+                    PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                ps.setString(2, username);
+                
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+            return;
+        }
+        
         String sql = "INSERT INTO Time (clockInTime, clockOutTime, username)"
                 + " VALUES(?, NULL, ?)";
-        deletePreviousTime(username);
 
         try (Connection connection = connector.connect();
                 PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -86,11 +103,11 @@ public class DatabaseManager {
                 PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Timestamp clockInTime = rs.getTimestamp("clockInTime");
-                return clockInTime;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp clockInTime = rs.getTimestamp("clockInTime");
+                    return clockInTime;
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -121,15 +138,59 @@ public class DatabaseManager {
                 PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Timestamp clockOutTime = rs.getTimestamp("clockOutTime");
-                return clockOutTime;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp clockOutTime = rs.getTimestamp("clockOutTime");
+                    return clockOutTime;
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
+    
+    public boolean userExists(String username) {
+        String sql = "SELECT username from Time where username = ?";
+        
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+    
+    public List<UserReport> getUserReport() {
+        String sql = "SELECT u.username, u.role, u.gender, t.clockInTime, t.clockOutTime FROM "
+                + "Users u LEFT JOIN Time t ON u.username = t.username";
+        
+        List<UserReport> userReportList = new ArrayList<>();
+        
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            
+            while(rs.next()) {
+                String username = rs.getString("username");
+                String role = rs.getString("role");
+                String gender = rs.getString("gender");
+                Timestamp clockInTime = rs.getTimestamp("clockInTime");
+                Timestamp clockOutTime = rs.getTimestamp("clockOutTime");
+                
+                UserReport userReport = new UserReport(username, role, gender, clockInTime, clockOutTime);
+                userReportList.add(userReport);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return userReportList;
     }
 }

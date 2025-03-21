@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.setDefaultLookAndFeelDecorated;
@@ -22,6 +24,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import za.ac.tut.databases.DatabaseManager;
+import za.ac.tut.model.UserReport;
 
 public class HRFrame extends JFrame{
     
@@ -186,7 +189,16 @@ public class HRFrame extends JFrame{
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            List<UserReport> userReportList = manager.getUserReport();
             
+            StringBuilder report = new StringBuilder();
+            report.append("Username          Role                 Gender            "
+                    + "        Last clock in              Last clock out\n");
+            report.append("================================================================\n");
+            for(UserReport userReport: userReportList) {
+                report.append(userReport.toString()).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, report.toString(), "Report", JOptionPane.INFORMATION_MESSAGE);
         }
         
     }

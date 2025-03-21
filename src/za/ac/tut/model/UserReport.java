@@ -1,6 +1,8 @@
 package za.ac.tut.model;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class UserReport {
 
@@ -11,11 +13,24 @@ public class UserReport {
     private Timestamp clockOutTime;
 
     public UserReport(String username, String role, String gender, Timestamp clockInTime, Timestamp clockOutTime) {
+
         this.username = username;
         this.role = role;
         this.gender = gender;
         this.clockInTime = clockInTime;
         this.clockOutTime = clockOutTime;
+    }
+
+    public String formatTime(Timestamp time) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+
+        if (time != null) {
+            String formattedTime = timeFormat.format(time);
+
+            return formattedTime;
+        } else {
+            return "Not available";
+        }
     }
 
     public String getUsername() {
@@ -56,5 +71,11 @@ public class UserReport {
 
     public void setClockOutTime(Timestamp clockOutTime) {
         this.clockOutTime = clockOutTime;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%-22s %-26s %-22s %-22s %-22s",
+                username, role, gender, formatTime(clockInTime), formatTime(clockOutTime));
     }
 }
