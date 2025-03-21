@@ -5,15 +5,22 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.setDefaultLookAndFeelDecorated;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
+import za.ac.tut.databases.DatabaseManager;
 
 public class SupervisorFrame extends JFrame {
     //create panels
@@ -23,18 +30,20 @@ public class SupervisorFrame extends JFrame {
     private JPanel genderPn1;
     private JPanel rolePnl;
     private JPanel btnPnl;
-    private JPanel componenetsCombinedPnl;
+    public JPanel componenetsCombinedPnl;
     private JPanel mainPnl;
 
     //create labels 
     private JLabel headingLb1;
-    private JLabel usernameLb1;
-    private JLabel genderLb1;
-    private JLabel roleLb1;
+    public JLabel usernameLb1;
+    public JLabel genderLb1;
+    public JLabel roleLb1;
 
     //create buttons 
     private JButton clockInBtn;
     private JButton clockOutBtn;
+
+    private final DatabaseManager manager = new DatabaseManager();
 
     public SupervisorFrame() {
 
@@ -66,7 +75,9 @@ public class SupervisorFrame extends JFrame {
 
         //Create buttons 
         clockInBtn = new JButton("Clock In");
+        clockInBtn.addActionListener(new ClockInBtn());
         clockOutBtn = new JButton("Clock Out");
+        clockOutBtn.addActionListener(new ClockOutBtn());
 
         //add componenets to the panel 
         headingPn1.add(headingLb1);
@@ -99,4 +110,69 @@ public class SupervisorFrame extends JFrame {
 
     }
 
+    private class ClockInBtn implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String[] args = usernameLb1.getText().split(":");
+            String username = args[1].trim();
+
+            manager.addClockInTime(username);
+
+            Timestamp clockInTime = manager.getClockInTime(username);
+
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 8);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            Timestamp dutyTime = new Timestamp(today.getTimeInMillis());
+            
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            String formattedTime = timeFormat.format(clockInTime);
+
+            if (clockInTime.after(dutyTime)) {
+                JOptionPane.showMessageDialog(null, "Clock in time: " + formattedTime + "\n\n"
+                        + "You are late. You are supposed to report for duty at 8 AM.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Clock in time: " + formattedTime
+                        + "\n\nGood job! You have reported for duty on time.");
+            }
+        }
+    }
+
+    private class ClockOutBtn implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String[] args = usernameLb1.getText().split(":");
+            String username = args[1].trim();
+
+            manager.addClockOutTime(username);
+
+            Timestamp clockOutTime = manager.getClockOutTime(username);
+
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 16);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            Timestamp knockOff = new Timestamp(today.getTimeInMillis());
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            String formattedTime = timeFormat.format(clockOutTime);
+            
+            if (clockOutTime.after(knockOff)) {
+                JOptionPane.showMessageDialog(null, ""
+                        + "Job done for the day. Goodbye!"
+                        + "\n\nClock out time: " + formattedTime);
+            } else {
+                JOptionPane.showMessageDialog(null, "You are clocking off too early. Please note that"
+                        + " duty time is until 4 PM."
+                        + "\n\nClock out time: " + formattedTime);
+            }
+        }
+    }
 }

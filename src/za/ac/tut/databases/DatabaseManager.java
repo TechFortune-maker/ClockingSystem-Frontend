@@ -1,16 +1,20 @@
 package za.ac.tut.databases;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import za.ac.tut.model.User;
+import za.ac.tut.model.UserReport;
 
 public class DatabaseManager {
 
-    DatabaseConnector connector = new DatabaseConnector();
+    private final DatabaseConnector connector = new DatabaseConnector();
 
     public void registerUser(String username, String gender, String password, String role) {
         String sql = "INSERT INTO Users (username, gender, password, role) VALUES (?, ?, ?, ?)";
 
-        try (Connection connection = connector.connect(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, gender);
             ps.setString(3, password);
@@ -27,7 +31,8 @@ public class DatabaseManager {
         String sql = "SELECT username, gender, password, role FROM Users"
                 + " WHERE username = ?";
 
-        try (Connection connection = connector.connect(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
 
@@ -44,12 +49,87 @@ public class DatabaseManager {
         }
         return null;
     }
-    
-    public void clockInTime(String username) {
-        String sql = "INSERT INTO"
+
+    public void deletePreviousTime(String username) {
+        String sql = "DELETE FROM Time WHERE username = ?";
+        
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
-    public void clockOutTime(String username) {
-        
+    public void addClockInTime(String username) {
+        String sql = "INSERT INTO Time (clockInTime, clockOutTime, username)"
+                + " VALUES(?, NULL, ?)";
+        deletePreviousTime(username);
+
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            ps.setString(2, username);
+
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public Timestamp getClockInTime(String username) {
+        String sql = "SELECT clockInTime FROM Time WHERE username = ?";
+
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Timestamp clockInTime = rs.getTimestamp("clockInTime");
+                return clockInTime;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+
+    public void addClockOutTime(String username) {
+        String sql = "UPDATE Time SET clockOutTime = ? WHERE clockInTime = ? AND username = ?";
+        Timestamp clockInTime = getClockInTime(username);
+
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            ps.setTimestamp(2, clockInTime);
+            ps.setString(3, username);
+
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public Timestamp getClockOutTime(String username) {
+        String sql = "SELECT clockOutTime FROM Time WHERE username = ?";
+
+        try (Connection connection = connector.connect();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Timestamp clockOutTime = rs.getTimestamp("clockOutTime");
+                return clockOutTime;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 }

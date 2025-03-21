@@ -19,6 +19,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import za.ac.tut.databases.DatabaseManager;
+import za.ac.tut.frames.HRFrame;
+import za.ac.tut.frames.SupervisorFrame;
 import za.ac.tut.model.User;
 
 public class LoginFrame extends JFrame {
@@ -160,6 +162,27 @@ public class LoginFrame extends JFrame {
                 sf.usernameLb1.setText("Username: " + username);
                 sf.genderLb1.setText("Gender: " + gender);
                 sf.roleLb1.setText("Role: " + role);
+                sf.componenetsCombinedPnl.setBorder(
+                        new TitledBorder(new LineBorder(Color.BLUE, 2), "Student Personal Information")
+                );
+
+            } else if (role.equalsIgnoreCase("supervisor")) {
+                SupervisorFrame sf = new SupervisorFrame();
+                sf.usernameLb1.setText("Username: " + username);
+                sf.genderLb1.setText("Gender: " + gender);
+                sf.roleLb1.setText("Role: " + role);
+                sf.componenetsCombinedPnl.setBorder(
+                        new TitledBorder(new LineBorder(Color.BLUE, 2), "Supervisor Personal Information")
+                );
+                
+            } else if (role.equalsIgnoreCase("hr")) {
+                HRFrame hf = new HRFrame();
+                hf.usernameLb1.setText("Username: " + username);
+                hf.genderLb1.setText("Gender: " + gender);
+                hf.roleLb1.setText("Role: " + role);
+                hf.componenetsCombinedPnl.setBorder(
+                        new TitledBorder(new LineBorder(Color.BLUE, 2), "HR Personal Information")
+                );
             }
         }
     }
