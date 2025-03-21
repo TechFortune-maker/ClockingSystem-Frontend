@@ -1,7 +1,9 @@
 
-package za.ac.tut.databases;
+package za.ac.tut.handler.DatabaseManager;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
     
@@ -22,5 +24,23 @@ public class DatabaseManager {
         } catch(SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    public boolean validateUser(String username, String password){
+         String sql="SELECT * FROM Users WHERE username = ? AND password = ?";
+         
+         Connection connection = connector.connect();
+         
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException ex) {
+            System.out.println("Error during login: "+ex.getMessage());
+        }
+         
+         return false;
     }
 }

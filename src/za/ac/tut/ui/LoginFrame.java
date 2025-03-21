@@ -10,12 +10,14 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
+import za.ac.tut.handler.DatabaseManager.DatabaseManager;
 import za.ac.tut.reui.RegisterFrame;
 import za.ac.tut.student.StudentFrame;
 
@@ -128,9 +130,22 @@ public class LoginFrame extends JFrame{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //call another frame
-            new StudentFrame();
-          
+            
+            String username = usernameTxtFld.getText();
+            String password = new String(passwordFld.getPassword());
+            
+            DatabaseManager manager = new DatabaseManager();
+            
+            if(manager.validateUser(username, password)){
+                JOptionPane.showMessageDialog(null, "Login Successful");
+                new StudentFrame();
+                dispose();
+            
+            }else{
+            
+                JOptionPane.showMessageDialog(null, "Invalid username or password");
+            }
+
         }
  
     }
