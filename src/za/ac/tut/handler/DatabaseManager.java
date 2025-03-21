@@ -8,7 +8,7 @@ public class DatabaseManager {
     DatabaseConnector connector = new DatabaseConnector();
     
     public void registerUser(String username, String gender, String password, String role) {
-        String sql = "INSERT INTO Users (username, gender, password, role) VALUES = (?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (username, gender, password, role) VALUES (?, ?, ?, ?)";
         
         try (Connection connection = connector.connect();
                 PreparedStatement ps = connection.prepareStatement(sql)) {

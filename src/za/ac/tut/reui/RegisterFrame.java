@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -15,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
+import za.ac.tut.handler.DatabaseManager;
 
 
 public class RegisterFrame extends JFrame{
@@ -103,6 +106,7 @@ public class RegisterFrame extends JFrame{
         roleComboBox.addItem("Student");
         
         submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(new SubmitBtnListener());
         
         //add componenets to the panel
         headingPnl.add(headingLbl);
@@ -146,6 +150,26 @@ public class RegisterFrame extends JFrame{
         //make the frame visible
         setVisible(true);
         
+    }
+    private class SubmitBtnListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+           String username,password,role,gender; 
+           
+           //read data from the fields
+           username = usernameTxtFld.getText();
+           password = passwordTxtFld.getText();
+           gender = (String)genderComboBox.getSelectedItem();
+           role = (String)roleComboBox.getSelectedItem();
+           
+           DatabaseManager manager = new DatabaseManager();
+           manager.registerUser(username, gender, password, role);
+            
+        }
+    
+    
     }
 
    

@@ -17,6 +17,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import za.ac.tut.reui.RegisterFrame;
+import za.ac.tut.student.StudentFrame;
 
 
 public class LoginFrame extends JFrame{
@@ -80,6 +81,7 @@ public class LoginFrame extends JFrame{
         
         //Create buttons 
         loginBtn = new JButton("Login");
+        loginBtn.addActionListener(new LoginBtnlistener());
         registerBtn = new JButton("Register");
         registerBtn.addActionListener(new RegisterBtnListener());
         
@@ -119,6 +121,16 @@ public class LoginFrame extends JFrame{
             //Call the register frame page
             new RegisterFrame();
             
+        }
+ 
+    }
+    private class LoginBtnlistener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //call another frame
+            new StudentFrame();
+          
         }
  
     }
