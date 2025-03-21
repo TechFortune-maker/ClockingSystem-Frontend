@@ -1,5 +1,6 @@
 package za.ac.tut.ui;
 
+import za.ac.tut.frames.StudentFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -19,8 +20,6 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import za.ac.tut.databases.DatabaseManager;
 import za.ac.tut.model.User;
-import za.ac.tut.reui.RegisterFrame;
-import za.ac.tut.student.StudentFrame;
 
 public class LoginFrame extends JFrame {
     //panels 
@@ -124,7 +123,6 @@ public class LoginFrame extends JFrame {
             new RegisterFrame();
 
         }
-
     }
 
     private class LoginBtnlistener implements ActionListener {
@@ -138,7 +136,10 @@ public class LoginFrame extends JFrame {
             User user = manager.getUserDetails(enteredUsername);
 
             if (user == null) {
-                JOptionPane.showMessageDialog(null, "User doesn't exist. Create an account first.");
+                JOptionPane.showMessageDialog(
+                        null, "User doesn't exist. Create an account first.",
+                        "User Invalid", JOptionPane.ERROR_MESSAGE
+                );
                 return;
             }
 
@@ -148,7 +149,9 @@ public class LoginFrame extends JFrame {
             String password = user.getPassword();
 
             if (!enteredPassword.equals(password)) {
-                JOptionPane.showMessageDialog(null, "Password doesn't match. Try again.");
+                JOptionPane.showMessageDialog(
+                        null, "Password doesn't match. Try again.",
+                        "Invalid Password", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 

@@ -1,5 +1,6 @@
+package za.ac.tut.frames;
 
-package za.ac.tut.hr;
+
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -8,15 +9,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import static javax.swing.JFrame.setDefaultLookAndFeelDecorated;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 
-public class HRFrame extends JFrame{
+public class StudentFrame extends JFrame{
     
     //create panels
     private JPanel headingPn1;
@@ -28,18 +27,17 @@ public class HRFrame extends JFrame{
     private JPanel mainPnl;
     
     //create labels 
-    private JLabel headingLb1;
-    private JLabel usernameLb1;
-    private JLabel genderLb1;
-    private JLabel roleLb1;
+    public JLabel headingLb1;
+    public JLabel usernameLb1;
+    public JLabel genderLb1;
+    public JLabel roleLb1;
     
     //create buttons 
     private JButton clockInBtn;
     private JButton clockOutBtn;
-    private JButton viewReportsBtn;
 
 
-    public HRFrame() {
+    public StudentFrame() {
         
         setSize(600, 650);
         setResizable(true);
@@ -70,7 +68,6 @@ public class HRFrame extends JFrame{
         //Create buttons 
         clockInBtn = new JButton("Clock In");
         clockOutBtn = new JButton("Clock Out");
-        viewReportsBtn = new JButton("View Reports");
         
         //add componenets to the panel 
         headingPn1.add(headingLb1);
@@ -87,7 +84,6 @@ public class HRFrame extends JFrame{
         //button panel 
         btnPnl.add(clockInBtn);
         btnPnl.add(clockOutBtn);
-        btnPnl.add(viewReportsBtn);
         
         mainPnl.add(headingPn1, BorderLayout.NORTH);
         mainPnl.add(componenetsCombinedPnl, BorderLayout.CENTER);
@@ -101,7 +97,6 @@ public class HRFrame extends JFrame{
         
         //make the frame visible 
         setVisible(true);
-
         
     }
 

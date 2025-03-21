@@ -1,5 +1,5 @@
 
-package za.ac.tut.supervisor;
+package za.ac.tut.frames;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,9 +16,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 
-
-public class SupervisorFrame extends JFrame{
-      //create panels
+public class HRFrame extends JFrame{
+    
+    //create panels
     private JPanel headingPn1;
     private JPanel usernamePn1;
     private JPanel genderPn1;
@@ -36,11 +36,12 @@ public class SupervisorFrame extends JFrame{
     //create buttons 
     private JButton clockInBtn;
     private JButton clockOutBtn;
-            
+    private JButton viewReportsBtn;
 
-    public SupervisorFrame()  {
+
+    public HRFrame() {
         
-            setSize(600, 650);
+        setSize(600, 650);
         setResizable(true);
         setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -69,6 +70,7 @@ public class SupervisorFrame extends JFrame{
         //Create buttons 
         clockInBtn = new JButton("Clock In");
         clockOutBtn = new JButton("Clock Out");
+        viewReportsBtn = new JButton("View Reports");
         
         //add componenets to the panel 
         headingPn1.add(headingLb1);
@@ -85,6 +87,7 @@ public class SupervisorFrame extends JFrame{
         //button panel 
         btnPnl.add(clockInBtn);
         btnPnl.add(clockOutBtn);
+        btnPnl.add(viewReportsBtn);
         
         mainPnl.add(headingPn1, BorderLayout.NORTH);
         mainPnl.add(componenetsCombinedPnl, BorderLayout.CENTER);
@@ -98,9 +101,8 @@ public class SupervisorFrame extends JFrame{
         
         //make the frame visible 
         setVisible(true);
-        
+
         
     }
-    
 
 }
