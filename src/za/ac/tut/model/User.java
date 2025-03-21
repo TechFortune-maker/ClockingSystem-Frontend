@@ -1,13 +1,13 @@
 
-package za.ac.tut.employee;
+package za.ac.tut.model;
 
-public class Employee {
+public class User {
     private String username;
     private String gender;
     private String role;
     private String password;
 
-    public Employee(String username, String gender, String role, String password) {
+    public User(String username, String gender, String role, String password) {
         this.username = username;
         this.gender = gender;
         this.role = role;
