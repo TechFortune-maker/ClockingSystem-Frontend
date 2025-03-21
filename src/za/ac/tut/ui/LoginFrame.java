@@ -159,7 +159,5 @@ public class LoginFrame extends JFrame {
                 sf.roleLb1.setText("Role: " + role);
             }
         }
-
     }
-
 }

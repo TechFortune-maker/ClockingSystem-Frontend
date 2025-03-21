@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
-import za.ac.tut.databases.*;
+import za.ac.tut.databases.DatabaseManager;
 
 
 public class RegisterFrame extends JFrame{
@@ -166,12 +166,6 @@ public class RegisterFrame extends JFrame{
            
            DatabaseManager manager = new DatabaseManager();
            manager.registerUser(username, gender, password, role);
-            
         }
-    
-    
     }
-
-   
-    
 }
