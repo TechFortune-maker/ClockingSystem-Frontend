@@ -1,5 +1,5 @@
 
-package za.ac.tut.handler;
+package za.ac.tut.databases;
 
 import java.sql.*;
 
